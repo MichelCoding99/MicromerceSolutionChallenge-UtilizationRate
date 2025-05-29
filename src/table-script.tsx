@@ -59,13 +59,19 @@ const tableData: TableDataType[] = (sourceData as unknown as SourceDataType[])
       personData?.workforceUtilisation?.utilisationRateYearToDate
     );
 
+    const lastThreeMonths =
+      personData?.workforceUtilisation?.lastThreeMonthsIndividually || [];
+    const juneValue = formatPercentage(lastThreeMonths[2]?.utilisationRate);
+    const julyValue = formatPercentage(lastThreeMonths[1]?.utilisationRate);
+    const augustValue = formatPercentage(lastThreeMonths[0]?.utilisationRate);
+
     const row: TableDataType = {
       person: personName,
       past12Months: past12MonthsValue,
       y2d: y2dValue,
-      may: `may placeholder`,
-      june: `june placeholder`,
-      july: `july placeholder`,
+      june: juneValue,
+      july: julyValue,
+      august: augustValue,
       netEarningsPrevMonth: `netEarningsPrevMonth placeholder`,
     };
 
@@ -89,10 +95,6 @@ const Example = () => {
         header: "Y2D",
       },
       {
-        accessorKey: "may",
-        header: "May",
-      },
-      {
         accessorKey: "june",
         header: "June",
       },
@@ -100,6 +102,11 @@ const Example = () => {
         accessorKey: "july",
         header: "July",
       },
+      {
+        accessorKey: "august",
+        header: "August",
+      },
+
       {
         accessorKey: "netEarningsPrevMonth",
         header: "Net Earnings Prev Month",
