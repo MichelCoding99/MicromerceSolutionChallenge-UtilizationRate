@@ -20,23 +20,40 @@ import type { SourceDataType, TableDataType } from "./types";
  * @prop {number} netEarningsPrevMonth - The net earnings for the previous month.
  */
 
-const tableData: TableDataType[] = (
-  sourceData as unknown as SourceDataType[]
-).map((dataRow, index) => {
-  const person = `${dataRow?.employees?.firstname} - ...`;
+const tableData: TableDataType[] = (sourceData as unknown as SourceDataType[])
+  .filter((dataRow) => {
+    // Only Filter lines, that have a 'employees'- or 'externals'-Object.
+    return dataRow.employees || dataRow.externals;
+  })
+  .map((dataRow) => {
+    const personData = dataRow.employees || dataRow.externals; // It's either a employee or a external
 
-  const row: TableDataType = {
-    person: `${person}`,
-    past12Months: `past12Months ${index} placeholder`,
-    y2d: `y2d ${index} placeholder`,
-    may: `may ${index} placeholder`,
-    june: `june ${index} placeholder`,
-    july: `july ${index} placeholder`,
-    netEarningsPrevMonth: `netEarningsPrevMonth ${index} placeholder`,
-  };
+    // Check the status
+    const isActive =
+      personData?.statusAggregation?.status === "active" ||
+      personData?.status === "active";
 
-  return row;
-});
+    // Only process active employees/externals
+    if (!isActive) {
+      return null;
+    }
+
+    // person name extraction
+    const personName = personData?.name || "";
+
+    const row: TableDataType = {
+      person: personName,
+      past12Months: `past12Months placeholder`,
+      y2d: `y2d placeholder`,
+      may: `may placeholder`,
+      june: `june placeholder`,
+      july: `july placeholder`,
+      netEarningsPrevMonth: `netEarningsPrevMonth placeholder`,
+    };
+
+    return row;
+  })
+  .filter((row) => row != null) as TableDataType[]; // remove null-entries
 
 const Example = () => {
   const columns = useMemo<MRT_ColumnDef<TableDataType>[]>(
