@@ -14,10 +14,13 @@ type Period = {
   timeBudget?: string;
 };
 
+export type MonthlyFinancialEntry = { costs: string; month: string };
+
 type CostsByMonth = {
   _applicationId: string;
   periods?: Period[];
-  costsByMonth?: { costs: string; month: string }[];
+  costsByMonth?: MonthlyFinancialEntry[];
+  potentialEarningsByMonth?: MonthlyFinancialEntry[];
   _updatedDate: string;
   _definitionId: string;
   _createdDate: string;
@@ -63,7 +66,7 @@ type WorkforceUtilisation = {
   lastThreeMonthsIndividually?: LastThreeMonthsIndividually[];
 };
 
-type Employee = {
+export type Employee = {
   birthday?: string;
   firstname: string;
   _mrn: string;
@@ -96,7 +99,7 @@ type Employee = {
   employmentStatus?: EmploymentStatus;
 };
 
-type ExternalEmployee = Employee & {
+export type ExternalEmployee = Employee & {
   salutation?: string;
   email?: string;
 };
