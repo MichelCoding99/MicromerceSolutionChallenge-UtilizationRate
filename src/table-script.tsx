@@ -20,6 +20,17 @@ import type { SourceDataType, TableDataType } from "./types";
  * @prop {number} netEarningsPrevMonth - The net earnings for the previous month.
  */
 
+const formatPercentage = (value: string | null | undefined): string => {
+  if (value === null || value === undefined) {
+    return "N/A";
+  }
+  const numValue = parseFloat(value);
+  if (isNaN(numValue)) {
+    return "-"; // if the value is not a valid number
+  }
+  return `${(numValue * 100).toFixed(0)}%`; // Rounding up to whole percentages
+};
+
 const tableData: TableDataType[] = (sourceData as unknown as SourceDataType[])
   .filter((dataRow) => {
     // Only Filter lines, that have a 'employees'- or 'externals'-Object.
@@ -41,10 +52,17 @@ const tableData: TableDataType[] = (sourceData as unknown as SourceDataType[])
     // person name extraction
     const personName = personData?.name || "";
 
+    const past12MonthsValue = formatPercentage(
+      personData?.workforceUtilisation?.utilisationRateLastTwelveMonths
+    );
+    const y2dValue = formatPercentage(
+      personData?.workforceUtilisation?.utilisationRateYearToDate
+    );
+
     const row: TableDataType = {
       person: personName,
-      past12Months: `past12Months placeholder`,
-      y2d: `y2d placeholder`,
+      past12Months: past12MonthsValue,
+      y2d: y2dValue,
       may: `may placeholder`,
       june: `june placeholder`,
       july: `july placeholder`,
